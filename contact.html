@@ -489,45 +489,30 @@
       <div class="contact-card chamfer-sm">
         <h3>Send a message</h3>
         <p>Tell us how your order turned out &mdash; a photo helps, whether it's a nice finish or something that arrived damaged.</p>
-        <form class="contact-form" id="contactForm" action="https://formsubmit.co/5z3dgo@gmail.com" method="POST" enctype="multipart/form-data">
-          <input type="hidden" name="_subject" value="New message from 5Z Labs Studio site">
-          <input type="hidden" name="_template" value="table">
-          <input type="text" name="_honey" style="display:none">
-
+        <form class="contact-form" id="contactForm">
           <div class="field-block">
-            <label for="ccEmail">Your email</label>
-            <input type="email" id="ccEmail" name="email" placeholder="Enter your email" required>
+            <label for="ccPhone">Your number</label>
+            <input type="tel" id="ccPhone" name="phone" placeholder="Enter your number" required>
           </div>
 
           <div class="field-block">
             <label for="ccMessage">Your message</label>
-            <textarea id="ccMessage" name="message" maxlength="800" placeholder="Type your message here &mdash; how the order turned out, a request, or anything else." required></textarea>
+            <textarea id="ccMessage" name="message" maxlength="800" placeholder="Enter your message &mdash; how the order turned out, a request, or anything else." required></textarea>
             <p class="char-count" id="ccCharCount">0 / 800</p>
+            <p style="color:var(--steel); font-size:0.8rem; margin-top:6px;">Want to share a photo? You can add it once we're chatting in WhatsApp.</p>
           </div>
 
-          <div class="field-block">
-            <label>Upload a photo (optional)</label>
-            <div class="upload-row">
-              <label class="upload-btn chamfer-sm">
-                <span>Choose photo</span>
-                <input type="file" id="ccPhoto" name="attachment" accept="image/*">
-              </label>
-              <div class="upload-preview" id="ccPreview"><img id="ccPreviewImg" alt="Selected photo"></div>
-              <span class="upload-filename" id="ccFileName"></span>
-            </div>
-          </div>
-
-          <button type="submit" class="btn btn-primary chamfer-sm">Send message &rarr;</button>
-          <p class="form-status" id="ccStatus">Sending...</p>
+          <a href="#" id="ccSendBtn" class="btn btn-primary chamfer-sm" target="_blank" rel="noopener">Send message through WhatsApp &rarr;</a>
+          <a href="#" id="ccWaOpenBtn" class="btn btn-ghost chamfer-sm" style="margin-top:12px;" target="_blank" rel="noopener">Open chat in WhatsApp &rarr;</a>
         </form>
       </div>
       <div class="contact-card chamfer-sm">
-        <h3>Find us in person</h3>
-        <p>A rotating stock of keychains, bookmarks and magnets sits on the shelf at our local shop partner.</p>
+        <h3>Why 5Z Labs Studio</h3>
+        <p>Every keychain is designed and printed in-house, layer by layer, then finished and packed by hand — no two batches ever quite the same.</p>
         <ul class="contact-list">
           <li><span class="label">Based in</span><span class="value">Leicester, UK</span></li>
-          <li><span class="label">Stock updates</span><span class="value">Every few weeks</span></li>
-          <li><span class="label">Custom orders</span><span class="value">By request</span></li>
+          <li><span class="label">Made to order</span><span class="value">Every single piece</span></li>
+          <li><span class="label">Custom names</span><span class="value">Always welcome</span></li>
         </ul>
       </div>
     </div>
@@ -584,29 +569,31 @@
     });
   }
 
-  var photo = document.getElementById('ccPhoto');
-  var preview = document.getElementById('ccPreview');
-  var previewImg = document.getElementById('ccPreviewImg');
-  var fileName = document.getElementById('ccFileName');
-  if (photo) {
-    photo.addEventListener('change', function(){
-      var file = photo.files && photo.files[0];
-      if (file) {
-        previewImg.src = URL.createObjectURL(file);
-        preview.style.display = 'block';
-        fileName.textContent = file.name;
-      } else {
-        preview.style.display = 'none';
-        fileName.textContent = '';
-      }
-    });
+  var WHATSAPP_NUMBER = "447831334148";
+  var waOpenBtn = document.getElementById('ccWaOpenBtn');
+  if (waOpenBtn) {
+    waOpenBtn.href = 'https://wa.me/' + WHATSAPP_NUMBER;
   }
 
-  var form = document.getElementById('contactForm');
-  var status = document.getElementById('ccStatus');
-  if (form && status) {
-    form.addEventListener('submit', function(){
-      status.style.display = 'block';
+  var sendBtn = document.getElementById('ccSendBtn');
+  var phone = document.getElementById('ccPhone');
+  if (sendBtn) {
+    sendBtn.addEventListener('click', function(e){
+      var phoneVal = phone ? phone.value.trim() : '';
+      var msgVal = msg ? msg.value.trim() : '';
+      if (!phoneVal || !msgVal) {
+        e.preventDefault();
+        alert('Please enter your number and a message first.');
+        if (!phoneVal && phone) phone.focus();
+        else if (msg) msg.focus();
+        return;
+      }
+      var draft = localStorage.getItem('fcl_order_draft') || '';
+      var text = draft + 'My number: ' + phoneVal + '\n' + msgVal;
+      // Set the href right before the click completes, so the browser
+      // treats this as a normal link navigation rather than a scripted
+      // popup (which many browsers/preview sandboxes block).
+      sendBtn.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
     });
   }
 </script>
