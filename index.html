@@ -391,6 +391,92 @@
     .product, .step, .btn-primary, .btn-gold{transition:none;}
   }
 </style>
+
+<style>
+  /* SPECIALS */
+  .specials-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:24px;
+  }
+  .special-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    overflow:hidden;
+    text-align:left;
+    cursor:pointer;
+    padding:0;
+    font:inherit;
+    color:inherit;
+    transition:transform .25s ease, border-color .25s ease;
+  }
+  .special-card:hover{transform:translateY(-6px); border-color:rgba(95,168,255,0.45);}
+  .special-cover-wrap{position:relative; aspect-ratio:1/1; overflow:hidden; background:#060a14;}
+  .special-cover{width:100%; height:100%; object-fit:cover; display:block;}
+  .special-play{
+    position:absolute; right:10px; bottom:10px;
+    width:30px; height:30px; border-radius:50%;
+    background:rgba(5,8,16,0.72); border:1px solid rgba(255,255,255,0.35);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .special-play svg{width:11px; height:11px; fill:var(--ivory); margin-left:2px;}
+  .special-info{padding:18px 20px;}
+  .special-info .tag{
+    font-family:'JetBrains Mono',monospace; font-size:0.68rem;
+    color:var(--blue-glow); text-transform:uppercase; letter-spacing:0.08em;
+    margin-bottom:8px; display:block;
+  }
+  .special-info h3{font-size:1rem; margin-bottom:6px; font-weight:600;}
+  .special-info p{color:var(--steel); font-size:0.85rem; line-height:1.5;}
+
+  /* LIGHTBOX */
+  .lightbox-overlay{
+    position:fixed; inset:0; background:rgba(2,4,10,0.86);
+    opacity:0; pointer-events:none; transition:opacity .2s ease;
+    z-index:200;
+  }
+  .lightbox-overlay.open{opacity:1; pointer-events:auto;}
+  .lightbox{
+    position:fixed; top:50%; left:50%; transform:translate(-50%,-48%);
+    width:min(880px, 92vw); max-height:88vh;
+    background:var(--panel); border:1px solid var(--line);
+    opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease;
+    z-index:201; display:flex; flex-direction:column;
+  }
+  .lightbox.open{opacity:1; pointer-events:auto; transform:translate(-50%,-50%);}
+  .lightbox-close{
+    position:absolute; top:12px; right:12px; width:36px; height:36px; z-index:5;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(5,8,16,0.7); border:1px solid var(--line); color:var(--ivory);
+    cursor:pointer; font-size:1.1rem;
+  }
+  .lightbox-close:hover{border-color:var(--blue-glow); color:var(--blue-glow);}
+  .lightbox-stage{
+    background:#000; display:flex; align-items:center; justify-content:center;
+    max-height:56vh; min-height:200px; overflow:hidden;
+  }
+  .lightbox-stage img, .lightbox-stage video{max-width:100%; max-height:56vh; display:block; object-fit:contain;}
+  .lightbox-thumbs{
+    display:flex; gap:10px; padding:16px 20px 0; overflow-x:auto;
+  }
+  .lightbox-thumb{
+    position:relative; flex:0 0 auto; width:64px; height:64px;
+    border:1px solid var(--line); cursor:pointer; opacity:0.6;
+    transition:opacity .2s ease, border-color .2s ease;
+  }
+  .lightbox-thumb.active{opacity:1; border-color:var(--blue-glow);}
+  .lightbox-thumb img{width:100%; height:100%; object-fit:cover; display:block;}
+  .lightbox-thumb .thumb-play{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    background:rgba(2,4,10,0.35);
+  }
+  .lightbox-thumb .thumb-play svg{width:14px; height:14px; fill:#fff;}
+  .lightbox-caption{padding:16px 20px 20px;}
+  .lightbox-caption h3{font-size:1.05rem; margin-bottom:6px;}
+  .lightbox-caption p{color:var(--steel); font-size:0.88rem; line-height:1.55;}
+  @media (max-width:640px){
+    .lightbox-stage{max-height:42vh;}
+    .lightbox-stage img, .lightbox-stage video{max-height:42vh;}
+  }
+</style>
 </head>
 <body>
 
@@ -456,6 +542,69 @@
   </div>
 </section>
 
+<section class="section" id="specials">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow"><span class="rule"></span>SPECIALS</div>
+      <h2>A few picks from the bench.</h2>
+      <p>One-off prints and experiments that didn't fit neatly into a category. Tap one for a closer look.</p>
+    </div>
+    <div class="specials-grid">
+      <button class="special-card chamfer-sm" data-special="dragon" type="button">
+        <div class="special-cover-wrap">
+          <img class="special-cover" src="images/specials/dragon-cover.jpg" alt="Articulated dragon fidget print">
+        </div>
+        <div class="special-info">
+          <span class="tag">Fidget</span>
+          <h3>Articulated Dragon</h3>
+          <p>Print-in-place spikes, fully posable, no supports.</p>
+        </div>
+      </button>
+      <button class="special-card chamfer-sm" data-special="vortex" type="button">
+        <div class="special-cover-wrap">
+          <img class="special-cover" src="images/specials/vortex-1-cover.jpg" alt="Spiral vortex wall art print">
+        </div>
+        <div class="special-info">
+          <span class="tag">Wall Art</span>
+          <h3>Vortex Panel</h3>
+          <p>One spiralling print that plays tricks on the eye.</p>
+        </div>
+      </button>
+      <button class="special-card chamfer-sm" data-special="magicbox" type="button">
+        <div class="special-cover-wrap">
+          <img class="special-cover" src="images/specials/magicbox-cover.jpg" alt="Vanishing card box magic prop">
+          <div class="special-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        </div>
+        <div class="special-info">
+          <span class="tag">Novelty</span>
+          <h3>Vanishing Card Box</h3>
+          <p>A working sliding-panel magic trick, printed by hand.</p>
+        </div>
+      </button>
+      <button class="special-card chamfer-sm" data-special="minifig" type="button">
+        <div class="special-cover-wrap">
+          <img class="special-cover" src="images/specials/minifig-cover.jpg" alt="Custom winged minifigure">
+        </div>
+        <div class="special-info">
+          <span class="tag">Custom Minifig</span>
+          <h3>Winged Custom Minifigure</h3>
+          <p>Send a character in, we print and finish the rest.</p>
+        </div>
+      </button>
+      <button class="special-card chamfer-sm" data-special="robot" type="button">
+        <div class="special-cover-wrap">
+          <img class="special-cover" src="images/specials/robot-cover.jpg" alt="Poseable robot fidget on a spinning base">
+        </div>
+        <div class="special-info">
+          <span class="tag">Fidget</span>
+          <h3>Little Guard-Bot</h3>
+          <p>Poseable head and legs on a base that spins.</p>
+        </div>
+      </button>
+    </div>
+  </div>
+</section>
+
 <section class="section section-alt" id="eidSection" style="display:none;">
   <div class="wrap">
     <div class="seasonal chamfer">
@@ -516,6 +665,132 @@
     if (pill) pill.style.display = 'flex';
     if (section) section.style.display = 'block';
   }
+</script>
+
+
+<div class="lightbox-overlay" id="specialOverlay"></div>
+<div class="lightbox" id="specialLightbox" role="dialog" aria-modal="true">
+  <button class="lightbox-close" id="specialClose" aria-label="Close">&times;</button>
+  <div class="lightbox-stage" id="specialStage"></div>
+  <div class="lightbox-thumbs" id="specialThumbs"></div>
+  <div class="lightbox-caption">
+    <h3 id="specialTitle"></h3>
+    <p id="specialDesc"></p>
+  </div>
+</div>
+
+<script>
+  var SPECIALS = {
+    dragon: {
+      title: 'Articulated Dragon',
+      desc: 'Print-in-place spikes, fully posable, no supports and no glue — every joint moves straight off the plate.',
+      media: [
+        { type:'image', src:'images/specials/dragon-full.jpg' }
+      ]
+    },
+    vortex: {
+      title: 'Vortex Panel',
+      desc: 'A single spiralling print that plays tricks on the eye from every angle — shown here straight-on and from the side.',
+      media: [
+        { type:'image', src:'images/specials/vortex-1-full.jpg' },
+        { type:'image', src:'images/specials/vortex-2-full.jpg' }
+      ]
+    },
+    magicbox: {
+      title: 'Vanishing Card Box',
+      desc: 'A working sliding-panel magic trick, printed and finished by hand — tap the second thumbnail to see it in action.',
+      media: [
+        { type:'image', src:'images/specials/magicbox-full.jpg' },
+        { type:'video', src:'images/specials/magicbox.mp4', poster:'images/specials/magicbox-poster.jpg' }
+      ]
+    },
+    minifig: {
+      title: 'Winged Custom Minifigure',
+      desc: 'Hand-painted, one-off — send a character and we\'ll print and finish the rest.',
+      media: [
+        { type:'image', src:'images/specials/minifig-full.jpg' }
+      ]
+    },
+    robot: {
+      title: 'Little Guard-Bot',
+      desc: 'Poseable head and legs on a base that spins — stands on any desk.',
+      media: [
+        { type:'image', src:'images/specials/robot-full.jpg' }
+      ]
+    }
+  };
+
+  var specialOverlay = document.getElementById('specialOverlay');
+  var specialLightbox = document.getElementById('specialLightbox');
+  var specialStage = document.getElementById('specialStage');
+  var specialThumbs = document.getElementById('specialThumbs');
+  var specialTitle = document.getElementById('specialTitle');
+  var specialDesc = document.getElementById('specialDesc');
+  var specialClose = document.getElementById('specialClose');
+
+  function playIconSVG(){
+    return '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+  }
+
+  function showSpecialMedia(item){
+    if(item.type === 'video'){
+      specialStage.innerHTML = '<video controls autoplay playsinline poster="' + item.poster + '"><source src="' + item.src + '" type="video/mp4"></video>';
+    } else {
+      specialStage.innerHTML = '<img src="' + item.src + '" alt="">';
+    }
+  }
+
+  function renderSpecialThumbs(media, activeIndex){
+    if(media.length <= 1){
+      specialThumbs.innerHTML = '';
+      specialThumbs.style.display = 'none';
+      return;
+    }
+    specialThumbs.style.display = 'flex';
+    specialThumbs.innerHTML = media.map(function(item, i){
+      var thumbSrc = item.type === 'video' ? item.poster : item.src;
+      var playOverlay = item.type === 'video' ? '<span class="thumb-play">' + playIconSVG() + '</span>' : '';
+      return '<div class="lightbox-thumb' + (i === activeIndex ? ' active' : '') + '" data-index="' + i + '">' +
+        '<img src="' + thumbSrc + '" alt="">' + playOverlay +
+      '</div>';
+    }).join('');
+    Array.prototype.forEach.call(specialThumbs.querySelectorAll('.lightbox-thumb'), function(thumbEl){
+      thumbEl.addEventListener('click', function(){
+        var idx = parseInt(thumbEl.getAttribute('data-index'), 10);
+        showSpecialMedia(media[idx]);
+        Array.prototype.forEach.call(specialThumbs.querySelectorAll('.lightbox-thumb'), function(t){ t.classList.remove('active'); });
+        thumbEl.classList.add('active');
+      });
+    });
+  }
+
+  function openSpecial(key){
+    var s = SPECIALS[key];
+    if(!s) return;
+    specialTitle.textContent = s.title;
+    specialDesc.textContent = s.desc;
+    showSpecialMedia(s.media[0]);
+    renderSpecialThumbs(s.media, 0);
+    specialOverlay.classList.add('open');
+    specialLightbox.classList.add('open');
+  }
+
+  function closeSpecial(){
+    specialOverlay.classList.remove('open');
+    specialLightbox.classList.remove('open');
+    specialStage.innerHTML = '';
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('.special-card'), function(card){
+    card.addEventListener('click', function(){
+      openSpecial(card.getAttribute('data-special'));
+    });
+  });
+  specialClose.addEventListener('click', closeSpecial);
+  specialOverlay.addEventListener('click', closeSpecial);
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') closeSpecial();
+  });
 </script>
 
 </body>
